@@ -1,0 +1,6 @@
+
+config encryption
+	option key 'CRxK7WDJ0csTVuSlA4TKkd8tKkKkFRSpkwXIB871pNs6oxXz1QKvTJtVL1BMvUjt'
+	option iv '6opCUXAqeenHW4dwsHM92XLjD0adsUbEqjWcdXNX8D6KisWgsWbpjtbVVRT0Hv9l'
+
+
