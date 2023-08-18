@@ -4,11 +4,13 @@ local routes = {
 		"Controllers.token_controller",
 		"authenticate_user"
 	},
-	["/api/user/token/"] = {
-		"Controllers.token_controller",
-		"validate_token"
+	["/api/user/test/"] = {
+		"Controllers.temp_controller",
+		"temp_script",
+		"token"
 	}
 };
+local token = os.getenv("HTTP_TOKEN");
 local request_json = io.read("*a");
 local path = tostring(os.getenv("REQUEST_URI"));
 for route, controllerName in pairs(routes) do
@@ -16,7 +18,25 @@ for route, controllerName in pairs(routes) do
 		string.match(path, route)
 	};
 	if #params > 0 then
-		local controller = require(controllerName[1]);
-		local response = _G[controllerName[2]](request_json);
+		if controllerName[3] == "token" then
+			if token == nil then
+				require("Controllers.response_controller");
+				printResponse("error", "403", "Forbidden: Access denied", "application/json", "Forbidden", response);
+				os.exit(1);
+			end;
+			require("Controllers.token_controller");
+			local token_validate = validate_token(token);
+			if token_validate == true then
+				local controller = require(controllerName[1]);
+				local response = _G[controllerName[2]](request_json);
+			else
+				require("Controllers.response_controller");
+				printResponse("error", "403", "Forbidden: Access denied", "application/json", "Forbidden", response);
+				os.exit(1);
+			end;
+		else
+			local controller = require(controllerName[1]);
+			local response = _G[controllerName[2]](request_json);
+		end;
 	end;
 end;
