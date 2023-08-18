@@ -25,8 +25,19 @@ local function aes_encrypt(key, iv, plaintext)
 end;
 local function aes_decrypt(key, iv, ciphertext)
 	local cipher = openssl.cipher.new("aes-256-cbc");
-	cipher:init(key, iv, false);
-	return cipher:update(ciphertext) .. cipher:final();
+	local success = cipher:init(key, iv, false);
+	if not success then
+		return "";
+	end;
+	local decrypted_data = cipher:update(ciphertext);
+	local final_data, err = cipher:final();
+	if final_data then
+		decrypted_data = decrypted_data .. final_data;
+	else
+		printResponse("error", "403", "Forbidden: Access denied", "application/json", "Forbidden", response);
+		os.exit(1);
+	end;
+	return decrypted_data;
 end;
 local function generate_token(expiration_seconds, payload)
 	local key = silent_execute("uci get aerogel.@encryption[0].key");
@@ -41,11 +52,9 @@ local function generate_token(expiration_seconds, payload)
 	local token = openssl.hmac.digest("sha256", key_token, token_data);
 	return token .. ":" .. hex_payload .. ":" .. hex_time;
 end;
-function validate_token(request_json)
+function validate_token(token)
 	local key = silent_execute("uci get aerogel.@encryption[0].key");
 	local iv = silent_execute("uci get aerogel.@encryption[0].iv");
-	local json_data = request_json_decode(request_json);
-	local token = json_data.token;
 	local token_get, payload, expiration = token:match("([^:]+):([^:]+):([^:]+)");
 	if payload and expiration then
 		payload = hex_to_string(payload);
@@ -59,12 +68,12 @@ function validate_token(request_json)
 		if expiration >= current_time then
 			local generated_token = openssl.hmac.digest("sha256", key_token, token_data);
 			if token_get == generated_token then
-				print("ok");
+				return true;
 			else
-				print("nok");
+				return false;
 			end;
 		else
-			print("time");
+			return false;
 		end;
 	end;
 end;
