@@ -1,13 +1,14 @@
+--author: Komeil Majidi
 package.path = package.path .. ";/www/api/?.lua";
 local routes = {
 	["/api/user/authenticate/"] = {
-		"Controllers.token_controller",
+		"Controllers.authenticate_controller",
 		"authenticate_user"
 	},
 	["/api/user/test/"] = {
 		"Controllers.temp_controller",
 		"temp_script",
-		"token"
+		"token_filter"
 	}
 };
 local token = os.getenv("HTTP_TOKEN");
@@ -18,9 +19,9 @@ for route, controllerName in pairs(routes) do
 		string.match(path, route)
 	};
 	if #params > 0 then
-		if controllerName[3] == "token" then
+		if controllerName[3] == "token_filter" then
 			if token == nil then
-				require("Controllers.response_controller");
+				require("Views.json_view");
 				printResponse("error", "403", "Forbidden: Access denied", "application/json", "Forbidden", response);
 				os.exit(1);
 			end;
@@ -30,7 +31,7 @@ for route, controllerName in pairs(routes) do
 				local controller = require(controllerName[1]);
 				local response = _G[controllerName[2]](request_json);
 			else
-				require("Controllers.response_controller");
+				require("Views.json_view");
 				printResponse("error", "403", "Forbidden: Access denied", "application/json", "Forbidden", response);
 				os.exit(1);
 			end;
