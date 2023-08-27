@@ -1,15 +1,20 @@
 --author: Komeil Majidi
 package.path = package.path .. ";/www/api/?.lua";
 local routes = {
-	["/api/user/authenticate/"] = {
+	["/api/v1/user/authenticate/"] = {
 		"Controllers.authenticate_controller",
 		"authenticate_user"
 	},
-	["/api/user/test/"] = {
+	["/api/v1/user/test/"] = {
 		"Controllers.temp_controller",
 		"temp_script",
 		"token_filter"
-	}
+	},
+	["/api/v1/config/firewall/addredirect"] = {
+		"Controllers.firewall_controller",
+		"add_PortForward",
+		"token_filter"
+	},
 };
 local token = os.getenv("HTTP_TOKEN");
 local request_json = io.read("*a");
