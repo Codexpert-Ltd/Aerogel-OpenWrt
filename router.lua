@@ -15,6 +15,11 @@ local routes = {
 		"add_PortForward",
 		"token_filter"
 	},
+	["/api/v1/config/firewall/removeredirect"] = {
+		"Controllers.firewall_controller",
+		"remove_PortForward",
+		"token_filter"
+	},
 };
 local token = os.getenv("HTTP_TOKEN");
 local request_json = io.read("*a");
