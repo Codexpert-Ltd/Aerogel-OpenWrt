@@ -13,3 +13,16 @@ function add_PortForward(request_json)
 		
 		end
 end;
+
+
+function remove_PortForward(request_json)
+
+		local json_data = request_json_decode(request_json);
+		local firewall_model_response = removePortForward(json_data.name)
+		if firewall_model_response == true then 
+		printResponse("success", "200", "rule deleted", "application/json", "OK", response);
+		else 
+		printResponse("error", "404", firewall_model_response , "application/json", "Not Found", response);
+		
+		end
+end;
