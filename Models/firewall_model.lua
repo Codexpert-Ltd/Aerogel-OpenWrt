@@ -1,6 +1,5 @@
 --author: Komeil Majidi
 require("uci")
-
 function createPortForward(name, srcZone, srcPort, destIP, destPort)
     local uci = uci.cursor()
     uci:load("firewall")
@@ -9,7 +8,7 @@ function createPortForward(name, srcZone, srcPort, destIP, destPort)
     uci:foreach("firewall", "redirect", function(rule)
         if rule.name and rule.name:lower() == name:lower() then
             ruleExists = true
-            --return false 
+            return false 
         end
     end)
 
@@ -29,4 +28,27 @@ function createPortForward(name, srcZone, srcPort, destIP, destPort)
     uci:commit("firewall")
     uci:unload("firewall")
 	return true
+end
+
+function removePortForward(name)
+    local uci = uci.cursor()
+    uci:load("firewall")
+
+    local foundRuleIndex
+
+    uci:foreach("firewall", "redirect", function(rule)
+        if rule.name == name then
+            foundRuleIndex = rule[".name"]
+            return false 
+        end
+    end)
+    if foundRuleIndex then
+        uci:delete("firewall", foundRuleIndex)
+        uci:commit("firewall")
+		return true
+    else
+        return "Port forward rule not found."
+    end
+
+    uci:unload("firewall")
 end
