@@ -31,6 +31,13 @@ local routes = {
         filters = { "token_filter" },
         method = "GET"
     },
+	
+	["/api/v1/config/firewall/getrezones"] = {
+        controller = "Controllers.firewall_controller",
+        action = "get_Zones",
+        filters = { "token_filter" },
+        method = "GET"
+    },
 };
 
 
