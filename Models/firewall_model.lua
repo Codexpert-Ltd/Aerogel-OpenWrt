@@ -52,3 +52,22 @@ function removePortForward(name)
 
     uci:unload("firewall")
 end
+
+
+function getPortForwards()
+    local uci = uci.cursor()
+    uci:load("firewall")
+    local portForwards = {}
+    uci:foreach("firewall", "redirect", function(rule)
+        table.insert(portForwards, {
+            name = rule.name,
+            srcZone = rule.src,
+            srcPort = rule.src_dport,
+            destIP = rule.dest_ip,
+            destPort = rule.dest_port,
+            proto = rule.proto
+        })
+    end)
+    uci:unload("firewall")
+    return portForwards
+end
