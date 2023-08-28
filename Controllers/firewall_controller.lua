@@ -26,3 +26,10 @@ function remove_PortForward(request_json)
 		
 		end
 end;
+
+
+function get_PortForwards()
+	local forward_table = getPortForwards()
+	--local jsonOutput = request_json_encode(forward_table)
+	printResponse("success", "200", "List of PortForwards", "application/json", "OK", forward_table);
+end
