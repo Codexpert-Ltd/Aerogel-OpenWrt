@@ -20,6 +20,11 @@ local routes = {
 		"remove_PortForward",
 		"token_filter"
 	},
+	["/api/v1/config/firewall/getredirect"] = {
+		"Controllers.firewall_controller",
+		"get_PortForwards",
+		"token_filter"
+	},
 };
 local token = os.getenv("HTTP_TOKEN");
 local request_json = io.read("*a");
