@@ -33,3 +33,10 @@ function get_PortForwards()
 	--local jsonOutput = request_json_encode(forward_table)
 	printResponse("success", "200", "List of PortForwards", "application/json", "OK", forward_table);
 end
+
+
+function get_Zones()
+	local zone_table = getZone()
+	--local jsonOutput = request_json_encode(forward_table)
+	printResponse("success", "200", "List of Zones", "application/json", "OK", zone_table);
+end

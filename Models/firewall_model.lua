@@ -71,3 +71,24 @@ function getPortForwards()
     uci:unload("firewall")
     return portForwards
 end
+
+
+
+function getZone()
+    local uci = uci.cursor()
+    uci:load("firewall")
+    local zones = {}
+    uci:foreach("firewall", "zone", function(rule)
+        table.insert(zones, {
+            name = rule.name,
+            network = rule.network,
+            input = rule.input,
+            output = rule.output,
+            forward = rule.forward
+        })
+    end)
+    uci:unload("firewall")
+    return zones
+end
+
+
