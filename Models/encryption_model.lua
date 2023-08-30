@@ -1,6 +1,7 @@
 --author: Komeil Majidi
 --Wherever we need encryption!
 local openssl = require("openssl");
+require("Views.json_view");
 function aes_encrypt(key, iv, plaintext)
 	local cipher = openssl.cipher.new("aes-256-cbc");
 	cipher:init(key, iv, true);
