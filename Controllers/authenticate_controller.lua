@@ -19,6 +19,7 @@ function authenticate_user(request_json)
 		local decrypted_password = aes_decrypt(key, iv, password_from_db);
 		if decrypted_password == json_data.password then
 			local user_token = generate_token(10800, json_data.username);
+			local user_token = user_token:gsub("%u", string.lower)
 			local response = {
 				{
 					token = user_token
