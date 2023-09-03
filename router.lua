@@ -38,6 +38,13 @@ local routes = {
         filters = { "token_filter" },
         method = "GET"
     },
+	
+	["/api/v1/config/wifi/getdevices"] = {
+        controller = "Controllers.wifi_controller",
+        action = "get_WifiConfig",
+        filters = { "token_filter" },
+        method = "GET"
+    },
 };
 
 
